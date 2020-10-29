@@ -1,8 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import axios from 'axios'
 import { Link, useHistory } from 'react-router-dom'
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import { AuthContext } from '../../context/Auth'
+import { useForm } from 'antd/lib/form/Form'
 
 const layout = {
   labelCol: {
@@ -16,11 +17,7 @@ const layout = {
 const Register = () => {
   const history = useHistory()
   const [, setUser] = useContext(AuthContext)
-  const [input, setInput] = useState({ name: '', email: '', password: '' })
-
-  const handleChange = evt => {
-    setInput({...input, [evt.target.name]: evt.target.value})
-  }
+  const [form] = useForm()
 
   const handleSubmit = params => {
     axios.post('https://backendexample.sanbersy.com/api/register', params).then(res => {
@@ -38,6 +35,7 @@ const Register = () => {
 
   const onFinish = values => {
     handleSubmit(values)
+    form.resetFields()
   }
   
   const onFinishFailed = error => {
@@ -60,8 +58,6 @@ const Register = () => {
             <Form.Item
               label='Name'
               name='name'
-              onChange={handleChange}
-              value={input.name}
               rules={[
                 {
                   required: true,
@@ -73,8 +69,6 @@ const Register = () => {
             <Form.Item
               label='Email'
               name='email'
-              onChange={handleChange}
-              value={input.email}
               rules={[
                 {
                   required: true,
@@ -87,8 +81,6 @@ const Register = () => {
             <Form.Item
               label='Password'
               name='password'
-              onChange={handleChange}
-              value={input.password}
               rules={[
                 {
                   required: true,

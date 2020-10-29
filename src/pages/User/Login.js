@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import axios from 'axios'
 import { Redirect, Link } from 'react-router-dom'
 import { AuthContext } from '../../context/Auth'
@@ -19,15 +19,11 @@ const tailLayout = {
   wrapperCol: {
     span: 24,
   },
-};
+}
 
 const Login = () => {
   const [user, setUser] = useContext(AuthContext)
-  const [input, setInput] = useState({email: '', password: ''})
-  
-  const handleChange = evt => {
-    setInput({...input, [evt.target.name]: evt.target.value})
-  }
+  const [form] = Form.useForm()
 
   const handleSubmit = params => {
     axios.post('https://backendexample.sanbersy.com/api/user-login', params)
@@ -44,6 +40,7 @@ const Login = () => {
 
   const onFinish = values => {
     handleSubmit(values)
+    form.resetFields()
   }
   
   const onFinishFailed = error => {
@@ -70,7 +67,6 @@ const Login = () => {
             <Form.Item
               label='Email'
               name='email'
-              onChange={handleChange}
               rules={[
                 {
                   required: true,
@@ -83,7 +79,6 @@ const Login = () => {
             <Form.Item
               label='Password'
               name='password'
-              onChange={handleChange}
               rules={[
                 {
                   required: true,
