@@ -27,16 +27,6 @@ const MoviesForm = props => {
   const [form] = Form.useForm()
   const [user] = useContext(AuthContext)
   const movieId = props.match.params.id ? props.match.params.id : null
-  const [inputMovie, setInputMovie] = useState({
-    id: null,
-    title: "",
-    description: "",
-    year: 2020,
-    duration: 120,
-    genre: "",
-    rating: 0,
-    image_url: "",
-  })
   const [thumbnail, setThumbnail] = useState(img_default)
 
   useEffect(() => {
@@ -50,11 +40,6 @@ const MoviesForm = props => {
         .catch(error => console.log(error))
     }
   },[movieId, form])
-
-  
-  const handleChange = (evt) => {
-    setInputMovie({ ...inputMovie, [evt.target.name]: evt.target.value })
-  }
 
   const handleSubmit = (params) => {
     if (movieId === null) {
@@ -80,7 +65,6 @@ const MoviesForm = props => {
 
   const onFinish = (values) => {
     values.rating = values.rating * 2
-    setInputMovie(inputMovie)
     handleSubmit(values)
     form.resetFields()
   }
@@ -107,9 +91,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Title"
                       name="title"
-                      value={inputMovie.title}
-                      initialValue={inputMovie.title}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -122,9 +103,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Description"
                       name="description"
-                      value={inputMovie.description}
-                      initialValue={inputMovie.description}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -137,9 +115,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Year"
                       name="year"
-                      value={inputMovie.year}
-                      initialValue={inputMovie.year}
-                      onChange={handleChange}
                       rules={[
                         { required: true, message: "Please input year movie!" },
                       ]}
@@ -152,9 +127,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Duration"
                       name="duration"
-                      value={inputMovie.duration}
-                      initialValue={inputMovie.duration}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -170,9 +142,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Genre"
                       name="genre"
-                      value={inputMovie.genre}
-                      initialValue={inputMovie.genre}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -184,8 +153,6 @@ const MoviesForm = props => {
                     </Form.Item>
                     <Form.Item
                       name="rating"
-                      value={inputMovie.rating}
-                      initialValue={inputMovie.rating}
                       label="Rate"
                       rules={[
                         { required: true, message: "Please rate this movie!" },
@@ -197,9 +164,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Review"
                       name="review"
-                      value={inputMovie.review}
-                      initialValue={inputMovie.review}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -212,8 +176,6 @@ const MoviesForm = props => {
                     <Form.Item
                       label="Image URL"
                       name="image_url"
-                      value={inputMovie.image_url}
-                      initialValue={inputMovie.image_url}
                       onChange={e => e.target.value !== '' ? setThumbnail(e.target.value) : setThumbnail(img_default)}
                       rules={[
                         {

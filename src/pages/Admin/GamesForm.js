@@ -27,15 +27,6 @@ const GamesForm = props => {
   const [form] = Form.useForm()
   const [user] = useContext(AuthContext)
   const gameId = props.match.params.id ? props.match.params.id : null
-  const [inputGame, setInputGame] = useState({
-    name: '',
-    genre: '',
-    platform: '',
-    release: '',
-    singlePlayer: 0,
-    multiplayer: 0,
-    image_url: '',
-  })
   const [isCheckedSingle, setIsCheckedSingle] = useState(false)
   const [isCheckedMulti, setIsCheckedMulti] = useState(false)
   const checkSingle = useRef()
@@ -54,10 +45,6 @@ const GamesForm = props => {
         .catch(error => console.log(error))
     }
   },[gameId, form])
-
-  const handleChange = (evt) => {
-    setInputGame({ ...inputGame, [evt.target.name]: evt.target.value })
-  }
 
   const handleSubmit = (params) => {
     if (gameId === null) {
@@ -84,7 +71,6 @@ const GamesForm = props => {
   const onFinish = (values) => {
     values.singlePlayer = checkSingle.current.rcCheckbox.state.checked ? 1 : 0
     values.multiplayer = checkMulti.current.rcCheckbox.state.checked ? 1 : 0
-    setInputGame(inputGame)
     handleSubmit(values)
     form.resetFields()
   }
@@ -111,9 +97,6 @@ const GamesForm = props => {
                     <Form.Item
                       label="Name"
                       name="name"
-                      value={inputGame.name}
-                      initialValue={inputGame.name}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -126,9 +109,6 @@ const GamesForm = props => {
                     <Form.Item
                       label="Platform"
                       name="platform"
-                      value={inputGame.platform}
-                      initialValue={inputGame.platform}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -141,9 +121,6 @@ const GamesForm = props => {
                     <Form.Item
                       label="Genre"
                       name="genre"
-                      value={inputGame.genre}
-                      initialValue={inputGame.genre}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -156,9 +133,6 @@ const GamesForm = props => {
                     <Form.Item
                       label="Release"
                       name="release"
-                      value={inputGame.release}
-                      initialValue={inputGame.release}
-                      onChange={handleChange}
                       rules={[
                         {
                           required: true,
@@ -196,8 +170,6 @@ const GamesForm = props => {
                     <Form.Item
                       label="Image URL"
                       name="image_url"
-                      value={inputGame.image_url}
-                      initialValue={inputGame.image_url}
                       onChange={(e) =>
                         e.target.value !== ""
                           ? setThumbnail(e.target.value)
