@@ -3,7 +3,6 @@ import axios from 'axios'
 import { Link, useHistory } from 'react-router-dom'
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import { AuthContext } from '../../context/Auth'
-import { useForm } from 'antd/lib/form/Form'
 
 const layout = {
   labelCol: {
