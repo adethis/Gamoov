@@ -17,7 +17,7 @@ const layout = {
 const Register = () => {
   const history = useHistory()
   const [, setUser] = useContext(AuthContext)
-  const [form] = useForm()
+  const [form] = Form.useForm()
 
   const handleSubmit = params => {
     axios.post('https://backendexample.sanbersy.com/api/register', params).then(res => {
