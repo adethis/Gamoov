@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Row, Col, Card, Table, Button, Space, Modal, message, Input, Rate } from 'antd'
+import { Row, Col, Card, Table, Button, Space, Modal, message, Input, Rate, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/Auth'
 import { getMovies, deleteMovies } from '../../utils/Movies/MoviesAPI'
@@ -12,14 +12,17 @@ const Movies = () => {
   const [movies, setMovies] = useState([])
   let [searchText, setSearchText] = useState('')
   let [searchedColumn, setSearchedColumn] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const fetchData = () =>
     getMovies()
       .then(res => {
         setMovies(res.data)
+        setLoading(false)
       })
 
   useEffect(() => {
+    setLoading(true)
     fetchData()
   }, [])
 
@@ -115,14 +118,12 @@ const Movies = () => {
     setSearchText('')
   }  
 
+  const filterByData = data => formatter => data.map(item => ({
+    text: formatter(item),
+    value: formatter(item)
+  }))
+
   const columns = [
-    {
-      title: "No",
-      key: "index",
-      width: "5vw",
-      fixed: 'left',
-      render: (text, record, index) => index + 1
-    },
     {
       title: "Title",
       dataIndex: "title",
@@ -142,7 +143,9 @@ const Movies = () => {
     {
       title: "Duration",
       dataIndex: "duration",
-      width: 120,
+      width: 130,
+      filters: filterByData([...new Map(movies.map(item => [item.duration, item])).values()]) (i => i.duration),
+      onFilter: (value, record) => record.duration === value,
       sorter: (a, b) => a.duration - b.duration,
       sortDirections: ["descend", "ascend"],
       responsive: ['md']
@@ -211,15 +214,17 @@ const Movies = () => {
 
   return (
     <>
+      <Spin spinning={loading}>
       <Row gutter={[16, 16]}>
         <Col className="gutter-row" span={24}>
           <div className="site-card-border-less-wrapper">
             <Card title="List Movie" bordered={false} extra={buttonAdd} style={{ width: 'auto' }}>
-              <Table columns={columns} dataSource={movies} rowKey='id' scroll={{ x: 1000 }} />
+              <Table columns={columns} dataSource={movies} rowKey='id' scroll={{ x: 1200 }} />
             </Card>
           </div>
         </Col>
       </Row>
+      </Spin>
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/Auth'
 import { getGames, deleteGames } from '../../utils/Games/GamesAPI'
-import { Row, Col, Card, Table, Button, Space, Modal, message, Input, Tag } from 'antd'
+import { Row, Col, Card, Table, Button, Space, Modal, message, Input, Tag, Spin } from 'antd'
 import {
   VideoCameraAddOutlined,
   EditTwoTone,
@@ -19,14 +19,17 @@ const Games = () => {
   const [games, setGames] = useState([])
   let [searchText, setSearchText] = useState('')
   let [searchedColumn, setSearchedColumn] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const fetchData = () =>
     getGames()
       .then(res => {
         setGames(res.data)
+        setLoading(false)
       })
 
   useEffect(() => {
+    setLoading(true)
     fetchData()
   }, [])
 
@@ -126,14 +129,12 @@ const Games = () => {
     setSearchText('')
   }
 
+  const filterByData = data => formatter => data.map(item => ({
+    text: formatter(item),
+    value: formatter(item)
+  }))
+
   const columns = [
-    {
-      title: "No",
-      key: "index",
-      width: "5vw",
-      fixed: "left",
-      render: (text, record, index) => index + 1
-    },
     {
       title: "Name",
       dataIndex: "name",
@@ -163,7 +164,9 @@ const Games = () => {
     {
       title: "Release",
       dataIndex: "release",
-      width: 90,
+      width: 100,
+      filters: filterByData([...new Map(games.map(item => [item.release, item])).values()]) (i => i.release),
+      onFilter: (value, record) => record.release === value,
       sorter: (a, b) => a.release - b.release,
       sortDirections: ["descend", "ascend"],
     },
@@ -231,6 +234,7 @@ const Games = () => {
 
   return (
     <>
+      <Spin spinning={loading}>
       <Row gutter={[16, 16]}>
         <Col className="gutter-row" span={24}>
           <div className="site-card-border-less-wrapper">
@@ -245,6 +249,7 @@ const Games = () => {
           </div>
         </Col>
       </Row>
+      </Spin>
     </>
   )
 }
